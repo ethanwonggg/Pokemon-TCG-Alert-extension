@@ -2,10 +2,6 @@
 
 A Chrome extension to monitor and get instant notifications for new Pokemon card releases and restocks across Australian retailers.
 
-![PokéDrop AU](https://img.shields.io/badge/Pokemon-TCG-FFD93D?style=for-the-badge&logo=pokemon&logoColor=black)
-![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white)
-![Made for Australia](https://img.shields.io/badge/Made%20for-Australia-00843D?style=for-the-badge)
-
 ## Features
 
 - **Real-time Monitoring** - Automatically checks Australian retailers for new Pokemon card drops
