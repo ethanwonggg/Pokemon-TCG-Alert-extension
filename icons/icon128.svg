@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <circle cx="64" cy="64" r="60" fill="#1a1a2e" stroke="#ffd93d" stroke-width="4" filter="url(#glow)"/>
+  
+  <!-- Dividing line -->
+  <path d="M4 64 H124" stroke="#ffd93d" stroke-width="4"/>
+  
+  <!-- Top half shading -->
+  <path d="M64 4 A60 60 0 0 1 124 64 L4 64 A60 60 0 0 1 64 4" fill="#ff4757" opacity="0.3"/>
+  
+  <!-- Center button -->
+  <circle cx="64" cy="64" r="18" fill="#1a1a2e" stroke="#ffd93d" stroke-width="4"/>
+  <circle cx="64" cy="64" r="10" fill="#ffd93d"/>
+  
+  <!-- Shine effect -->
+  <ellipse cx="45" cy="35" rx="12" ry="8" fill="white" opacity="0.2" transform="rotate(-30 45 35)"/>
+</svg>
+

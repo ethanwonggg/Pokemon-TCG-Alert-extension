@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Generate PokéDrop Icons</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background: #1a1a2e;
+      color: white;
+      padding: 40px;
+      text-align: center;
+    }
+    h1 { color: #ffd93d; }
+    .icons { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin: 30px 0; }
+    .icon-box { background: #252542; padding: 20px; border-radius: 12px; }
+    .icon-box p { margin: 10px 0 0; font-size: 14px; color: #a0a0b8; }
+    canvas { display: block; margin: 0 auto 10px; }
+    a { display: inline-block; margin-top: 10px; padding: 8px 16px; background: #ffd93d; color: #1a1a2e; text-decoration: none; border-radius: 6px; font-weight: 600; }
+    a:hover { background: #ffe066; }
+    .instructions { max-width: 600px; margin: 30px auto; text-align: left; background: #252542; padding: 20px; border-radius: 12px; }
+    .instructions ol { padding-left: 20px; }
+    .instructions li { margin: 10px 0; }
+  </style>
+</head>
+<body>
+  <h1>PokéDrop AU Icon Generator</h1>
+  <p>Click each download link to save the icon PNG files to your icons folder.</p>
+  
+  <div class="icons">
+    <div class="icon-box">
+      <canvas id="icon16" width="16" height="16"></canvas>
+      <p>16x16</p>
+      <a id="download16" download="icon16.png">Download</a>
+    </div>
+    <div class="icon-box">
+      <canvas id="icon32" width="32" height="32"></canvas>
+      <p>32x32</p>
+      <a id="download32" download="icon32.png">Download</a>
+    </div>
+    <div class="icon-box">
+      <canvas id="icon48" width="48" height="48"></canvas>
+      <p>48x48</p>
+      <a id="download48" download="icon48.png">Download</a>
+    </div>
+    <div class="icon-box">
+      <canvas id="icon128" width="128" height="128"></canvas>
+      <p>128x128</p>
+      <a id="download128" download="icon128.png">Download</a>
+    </div>
+  </div>
+
+  <div class="instructions">
+    <h3>Instructions:</h3>
+    <ol>
+      <li>Click each "Download" button above</li>
+      <li>Save the files to the <code>icons/</code> folder in your extension directory</li>
+      <li>Refresh the extension in Chrome</li>
+    </ol>
+  </div>
+
+  <script>
+    function drawIcon(canvas) {
+      const ctx = canvas.getContext('2d');
+      const size = canvas.width;
+      const center = size / 2;
+      const radius = size * 0.45;
+      const strokeWidth = Math.max(1, size / 16);
+
+      // Clear
+      ctx.clearRect(0, 0, size, size);
+
+      // Background circle
+      ctx.beginPath();
+      ctx.arc(center, center, radius, 0, Math.PI * 2);
+      ctx.fillStyle = '#1a1a2e';
+      ctx.fill();
+      ctx.strokeStyle = '#ffd93d';
+      ctx.lineWidth = strokeWidth;
+      ctx.stroke();
+
+      // Top half (red tint)
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(center, center, radius - strokeWidth/2, Math.PI, 0);
+      ctx.closePath();
+      ctx.clip();
+      ctx.fillStyle = 'rgba(255, 71, 87, 0.3)';
+      ctx.fillRect(0, 0, size, center);
+      ctx.restore();
+
+      // Horizontal line
+      ctx.beginPath();
+      ctx.moveTo(center - radius, center);
+      ctx.lineTo(center + radius, center);
+      ctx.strokeStyle = '#ffd93d';
+      ctx.lineWidth = strokeWidth;
+      ctx.stroke();
+
+      // Center button (outer)
+      const btnRadius = size * 0.14;
+      ctx.beginPath();
+      ctx.arc(center, center, btnRadius, 0, Math.PI * 2);
+      ctx.fillStyle = '#1a1a2e';
+      ctx.fill();
+      ctx.strokeStyle = '#ffd93d';
+      ctx.lineWidth = strokeWidth;
+      ctx.stroke();
+
+      // Center button (inner)
+      const innerRadius = size * 0.08;
+      ctx.beginPath();
+      ctx.arc(center, center, innerRadius, 0, Math.PI * 2);
+      ctx.fillStyle = '#ffd93d';
+      ctx.fill();
+
+      // Shine
+      if (size >= 48) {
+        ctx.save();
+        ctx.translate(center - radius * 0.4, center - radius * 0.5);
+        ctx.rotate(-30 * Math.PI / 180);
+        ctx.beginPath();
+        ctx.ellipse(0, 0, radius * 0.2, radius * 0.12, 0, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    // Generate all icons
+    [16, 32, 48, 128].forEach(size => {
+      const canvas = document.getElementById(`icon${size}`);
+      drawIcon(canvas);
+      
+      // Set download link
+      const link = document.getElementById(`download${size}`);
+      link.href = canvas.toDataURL('image/png');
+    });
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PokéDrop AU</title>
+  <link rel="stylesheet" href="popup.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo-section">
+        <div class="logo-icon">
+          <svg viewBox="0 0 100 100" width="36" height="36">
+            <circle cx="50" cy="50" r="48" fill="#1a1a2e" stroke="#ffd93d" stroke-width="3"/>
+            <path d="M2 50 H98" stroke="#ffd93d" stroke-width="3"/>
+            <circle cx="50" cy="50" r="15" fill="#1a1a2e" stroke="#ffd93d" stroke-width="3"/>
+            <circle cx="50" cy="50" r="8" fill="#ffd93d"/>
+          </svg>
+        </div>
+        <div class="logo-text">
+          <h1>PokéDrop</h1>
+          <span class="region-badge">AU</span>
+        </div>
+      </div>
+      <div class="status-indicator" id="statusIndicator">
+        <span class="pulse"></span>
+        <span class="status-text">Monitoring</span>
+      </div>
+    </header>
+
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+      <div class="stat">
+        <span class="stat-value" id="checksToday">0</span>
+        <span class="stat-label">Checks Today</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value" id="dropsFound">0</span>
+        <span class="stat-label">Drops Found</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value" id="lastCheck">--:--</span>
+        <span class="stat-label">Last Check</span>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <nav class="tabs">
+      <button class="tab active" data-tab="retailers">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        Retailers
+      </button>
+      <button class="tab" data-tab="products">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7"/>
+          <rect x="14" y="3" width="7" height="7"/>
+          <rect x="14" y="14" width="7" height="7"/>
+          <rect x="3" y="14" width="7" height="7"/>
+        </svg>
+        Products
+      </button>
+      <button class="tab" data-tab="keywords">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="m21 21-4.35-4.35"/>
+        </svg>
+        Keywords
+      </button>
+      <button class="tab" data-tab="settings">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M12 1v6m0 6v10M4.22 4.22l4.24 4.24m7.08 7.08l4.24 4.24M1 12h6m6 0h10M4.22 19.78l4.24-4.24m7.08-7.08l4.24-4.24"/>
+        </svg>
+        Settings
+      </button>
+    </nav>
+
+    <!-- Tab Content -->
+    <main class="tab-content">
+      <!-- Retailers Tab -->
+      <section class="tab-panel active" id="retailers-panel">
+        <div class="panel-header">
+          <h2>Australian Retailers</h2>
+          <button class="btn-icon" id="toggleAllRetailers" title="Toggle All">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 11 12 14 22 4"/>
+              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+            </svg>
+          </button>
+        </div>
+        <div class="retailers-list" id="retailersList">
+          <!-- Populated by JS -->
+        </div>
+      </section>
+
+      <!-- Products Tab -->
+      <section class="tab-panel" id="products-panel">
+        <div class="panel-header">
+          <h2>Product Types to Monitor</h2>
+          <button class="btn-icon" id="toggleAllProducts" title="Toggle All">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 11 12 14 22 4"/>
+              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+            </svg>
+          </button>
+        </div>
+        <p class="helper-text">Select which product types you want to be notified about. Only checked items will trigger alerts.</p>
+        
+        <div class="product-categories">
+          <!-- Sealed Products -->
+          <div class="product-category">
+            <div class="category-header">
+              <span class="category-icon">📦</span>
+              <span class="category-name">Sealed Products</span>
+            </div>
+            <div class="product-type-list">
+              <label class="product-type-item" data-product="booster_box">
+                <div class="product-type-info">
+                  <span class="product-type-name">Booster Box</span>
+                  <span class="product-type-msrp">$180-230</span>
+                </div>
+                <input type="checkbox" class="product-type-check" data-product="booster_box" checked>
+              </label>
+              <label class="product-type-item" data-product="etb">
+                <div class="product-type-info">
+                  <span class="product-type-name">Elite Trainer Box (ETB)</span>
+                  <span class="product-type-msrp">$75-95</span>
+                </div>
+                <input type="checkbox" class="product-type-check" data-product="etb" checked>
+              </label>
+              <label class="product-type-item" data-product="upc">
+                <div class="product-type-info">
+                  <span class="product-type-name">Ultra Premium Collection</span>
+                  <span class="product-type-msrp">$170-220</span>
+                </div>
+                <input type="checkbox" class="product-type-check" data-product="upc" checked>
+              </label>
+              <label class="product-type-item" data-product="booster_bundle">
+                <div class="product-type-info">
+                  <span class="product-type-name">Booster Bundle</span>
+                  <span class="product-type-msrp">$32-45</span>
+                </div>
+                <input type="checkbox" class="product-type-check" data-product="booster_bundle" checked>
+              </label>
+            </div>
+          </div>
+
+          <!-- Collection Boxes -->
+          <div class="product-category">
+            <div class="category-header">
+              <span class="category-icon">🎁</span>
+              <span class="category-name">Collection Boxes</span>
+            </div>
+            <div class="product-type-list">
+              <label class="product-type-item" data-product="premium_collection">
+                <div class="product-type-info">
+                  <span class="product-type-name">Premium Collection</span>
+                  <span class="product-type-msrp">$70-120</span>
+                </div>
+                <input type="checkbox" class="product-type-check" data-product="premium_collection" checked>
+              </label>
+              <label class="product-type-item" data-product="collection_box">
+                <div class="product-type-info">
+                  <span class="product-type-name">Special Collection Box</span>
+                  <span class="product-type-msrp">$45-80</span>
+                </div>
+                <input type="checkbox" class="product-type-check" data-product="collection_box" checked>
+              </label>
+              <label class="product-type-item" data-product="poster_collection">
+                <div class="product-type-info">
+                  <span class="product-type-name">Poster Collection</span>
+                  <span class="product-type-msrp">$35-55</span>
+                </div>
+                <input type="checkbox" class="product-type-check" data-product="poster_collection" checked>
+              </label>
+              <label class="product-type-item" data-product="tech_sticker">
+                <div class="product-type-info">
+                  <span class="product-type-name">Tech Sticker Collection</span>
+                  <span class="product-type-msrp">$25-40</span>
+                </div>
+                <input type="checkbox" class="product-type-check" data-product="tech_sticker" checked>
+              </label>
+            </div>
+          </div>
+
+          <!-- Tins & Small Products -->
+          <div class="product-category">
+            <div class="category-header">
+              <span class="category-icon">🥫</span>
+              <span class="category-name">Tins & Small Products</span>
+            </div>
+            <div class="product-type-list">
+              <label class="product-type-item" data-product="tin">
+                <div class="product-type-info">
+                  <span class="product-type-name">Collector Tin</span>
+                  <span class="product-type-msrp">$30-45</span>
+                </div>
+                <input type="checkbox" class="product-type-check" data-product="tin" checked>
+              </label>
+              <label class="product-type-item" data-product="pokeball_tin">
+                <div class="product-type-info">
+                  <span class="product-type-name">Pokeball Tin</span>
+                  <span class="product-type-msrp">$18-30</span>
+                </div>
+                <input type="checkbox" class="product-type-check" data-product="pokeball_tin" checked>
+              </label>
+              <label class="product-type-item" data-product="mini_tin">
+                <div class="product-type-info">
+                  <span class="product-type-name">Mini Tin</span>
+                  <span class="product-type-msrp">$8-15</span>
+                </div>
+                <input type="checkbox" class="product-type-check" data-product="mini_tin">
+              </label>
+              <label class="product-type-item" data-product="blister">
+                <div class="product-type-info">
+                  <span class="product-type-name">Blister Pack (3-pack)</span>
+                  <span class="product-type-msrp">$16-22</span>
+                </div>
+                <input type="checkbox" class="product-type-check" data-product="blister">
+              </label>
+              <label class="product-type-item" data-product="booster_pack">
+                <div class="product-type-info">
+                  <span class="product-type-name">Single Booster Pack</span>
+                  <span class="product-type-msrp">$6-8</span>
+                </div>
+                <input type="checkbox" class="product-type-check" data-product="booster_pack">
+              </label>
+            </div>
+          </div>
+
+          <!-- Special & Other -->
+          <div class="product-category">
+            <div class="category-header">
+              <span class="category-icon">⭐</span>
+              <span class="category-name">Special & Other</span>
+            </div>
+            <div class="product-type-list">
+              <label class="product-type-item" data-product="build_battle">
+                <div class="product-type-info">
+                  <span class="product-type-name">Build & Battle Box</span>
+                  <span class="product-type-msrp">$35-55</span>
+                </div>
+                <input type="checkbox" class="product-type-check" data-product="build_battle" checked>
+              </label>
+              <label class="product-type-item" data-product="binder">
+                <div class="product-type-info">
+                  <span class="product-type-name">Binder / Portfolio</span>
+                  <span class="product-type-msrp">$20-40</span>
+                </div>
+                <input type="checkbox" class="product-type-check" data-product="binder">
+              </label>
+              <label class="product-type-item" data-product="mystery_box">
+                <div class="product-type-info">
+                  <span class="product-type-name">Mystery / Surprise Box</span>
+                  <span class="product-type-msrp">$50-100</span>
+                </div>
+                <input type="checkbox" class="product-type-check" data-product="mystery_box">
+              </label>
+              <label class="product-type-item" data-product="other">
+                <div class="product-type-info">
+                  <span class="product-type-name">Other Pokemon TCG</span>
+                  <span class="product-type-msrp">Various</span>
+                </div>
+                <input type="checkbox" class="product-type-check" data-product="other" checked>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="quick-select-buttons">
+          <button class="quick-select-btn" id="selectHighValue">Select High Value Only</button>
+          <button class="quick-select-btn" id="selectAll">Select All</button>
+          <button class="quick-select-btn" id="selectNone">Clear All</button>
+        </div>
+      </section>
+
+      <!-- Keywords Tab -->
+      <section class="tab-panel" id="keywords-panel">
+        <div class="panel-header">
+          <h2>Watch Keywords</h2>
+        </div>
+        <p class="helper-text">Get notified only when products contain these keywords. Leave empty to get all Pokemon TCG drops.</p>
+        <div class="keyword-input-wrapper">
+          <input type="text" id="keywordInput" placeholder="e.g., Prismatic Evolutions, ETB, Booster Box" />
+          <button class="btn-add" id="addKeyword">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </button>
+        </div>
+        <div class="keywords-list" id="keywordsList">
+          <!-- Populated by JS -->
+        </div>
+        <div class="preset-keywords">
+          <span class="preset-label">Quick Add:</span>
+          <div class="preset-chips">
+            <button class="preset-chip" data-keyword="Prismatic Evolutions">Prismatic Evolutions</button>
+            <button class="preset-chip" data-keyword="Surging Sparks">Surging Sparks</button>
+            <button class="preset-chip" data-keyword="ETB">ETB</button>
+            <button class="preset-chip" data-keyword="Booster Box">Booster Box</button>
+            <button class="preset-chip" data-keyword="UPC">UPC</button>
+            <button class="preset-chip" data-keyword="Elite Trainer">Elite Trainer</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Settings Tab -->
+      <section class="tab-panel" id="settings-panel">
+        <!-- Scan Settings -->
+        <div class="settings-card">
+          <div class="settings-card-header">
+            <span class="settings-card-icon">⚡</span>
+            <span class="settings-card-title">Scan Settings</span>
+          </div>
+          <div class="settings-card-body">
+            <div class="setting-row">
+              <span class="setting-name">Check Interval</span>
+              <div class="interval-selector compact">
+                <button class="interval-btn" data-interval="30">30s</button>
+                <button class="interval-btn active" data-interval="60">1m</button>
+                <button class="interval-btn" data-interval="120">2m</button>
+                <button class="interval-btn" data-interval="300">5m</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Value Filter -->
+        <div class="settings-card highlight-card">
+          <div class="settings-card-header">
+            <span class="settings-card-icon">💰</span>
+            <span class="settings-card-title">Good Value Filter</span>
+            <label class="toggle">
+              <input type="checkbox" id="goodValueOnly" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="settings-card-body" id="toleranceContainer">
+            <div class="tolerance-compact">
+              <span class="tolerance-label">Accept up to</span>
+              <span class="tolerance-value" id="toleranceValue">15%</span>
+              <span class="tolerance-label">above MSRP</span>
+            </div>
+            <input type="range" id="valueTolerance" min="0" max="30" value="15" class="tolerance-slider">
+          </div>
+        </div>
+
+        <!-- Notifications -->
+        <div class="settings-card">
+          <div class="settings-card-header">
+            <span class="settings-card-icon">🔔</span>
+            <span class="settings-card-title">Notifications</span>
+          </div>
+          <div class="settings-card-body">
+            <div class="setting-row">
+              <span class="setting-name">Desktop Alerts</span>
+              <label class="toggle">
+                <input type="checkbox" id="desktopNotifs" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="setting-row">
+              <span class="setting-name">Sound Effect</span>
+              <div class="toggle-with-test">
+                <label class="toggle">
+                  <input type="checkbox" id="soundAlert" checked>
+                  <span class="toggle-slider"></span>
+                </label>
+                <button class="btn-mini" id="testSound" title="Test Sound">🔊</button>
+              </div>
+            </div>
+            <div class="setting-row">
+              <span class="setting-name">Auto-open Links</span>
+              <label class="toggle">
+                <input type="checkbox" id="autoOpen">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="mac-hint">
+              <span>🍎 Mac: Enable in System Settings → Notifications → Chrome</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Price Range -->
+        <div class="settings-card">
+          <div class="settings-card-header">
+            <span class="settings-card-icon">💵</span>
+            <span class="settings-card-title">Price Range (AUD)</span>
+          </div>
+          <div class="settings-card-body">
+            <div class="price-inputs compact">
+              <div class="price-field">
+                <span class="currency">$</span>
+                <input type="number" id="minPrice" placeholder="0" value="0">
+              </div>
+              <span class="price-separator">to</span>
+              <div class="price-field">
+                <span class="currency">$</span>
+                <input type="number" id="maxPrice" placeholder="500" value="500">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Testing & Debug -->
+        <div class="settings-card">
+          <div class="settings-card-header">
+            <span class="settings-card-icon">🧪</span>
+            <span class="settings-card-title">Testing</span>
+          </div>
+          <div class="settings-card-body">
+            <div class="action-buttons">
+              <button class="action-btn primary" id="testWithSampleData">
+                ▶ Test Full Flow
+              </button>
+              <button class="action-btn" id="testNotification">
+                🔔 Test Alert
+              </button>
+            </div>
+            <div class="action-buttons">
+              <button class="action-btn" id="viewDebugLog">
+                📋 Debug Log
+              </button>
+              <button class="action-btn" id="clearKnownProducts">
+                🔄 Reset Cache
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Danger Zone -->
+        <button class="btn-danger-compact" id="clearData">
+          Clear All Data
+        </button>
+      </section>
+    </main>
+
+    <!-- Recent Drops Panel (shows after check) -->
+    <div class="recent-drops-panel" id="recentDropsPanel">
+      <div class="recent-drops-header">
+        <span>🎴 Recent Drops Found</span>
+        <button class="btn-close-panel" id="closeRecentDrops">&times;</button>
+      </div>
+      <div class="recent-drops-list" id="recentDropsList">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <!-- Footer Actions -->
+    <footer class="footer">
+      <button class="btn-primary" id="forceCheck">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M23 4v6h-6"/>
+          <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+        </svg>
+        Check Now
+      </button>
+      <button class="btn-secondary" id="viewHistory">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12 6 12 12 16 14"/>
+        </svg>
+        History
+      </button>
+    </footer>
+  </div>
+
+  <!-- History Modal -->
+  <div class="modal" id="historyModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Drop History</h3>
+        <button class="modal-close" id="closeHistory">&times;</button>
+      </div>
+      <div class="modal-body" id="historyList">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Debug Log Modal -->
+  <div class="modal" id="debugModal">
+    <div class="modal-content modal-large">
+      <div class="modal-header">
+        <h3>🔧 Debug Log</h3>
+        <button class="modal-close" id="closeDebug">&times;</button>
+      </div>
+      <div class="modal-body debug-log-container" id="debugLogList">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
+

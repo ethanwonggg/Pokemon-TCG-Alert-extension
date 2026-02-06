@@ -1,0 +1,65 @@
+{
+  "manifest_version": 3,
+  "name": "PokéDrop AU - Pokemon Card Drop Notifier",
+  "version": "1.1.0",
+  "description": "Get instant notifications for new Pokemon card releases and restocks across Australian retailers",
+  "permissions": [
+    "storage",
+    "alarms",
+    "notifications",
+    "offscreen",
+    "tabs",
+    "scripting",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "https://www.ebgames.com.au/*",
+    "https://www.bigw.com.au/*",
+    "https://www.jbhifi.com.au/*",
+    "https://www.target.com.au/*",
+    "https://www.zingpopculture.com.au/*",
+    "https://www.gameology.com.au/*",
+    "https://www.pokemoncenter.com/*",
+    "https://www.goodgames.com.au/*",
+    "https://www.kmart.com.au/*",
+    "https://*.ebgames.com.au/*",
+    "https://*.bigw.com.au/*",
+    "https://*.jbhifi.com.au/*",
+    "https://*.target.com.au/*"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.ebgames.com.au/*",
+        "https://www.bigw.com.au/*",
+        "https://www.jbhifi.com.au/*",
+        "https://www.target.com.au/*",
+        "https://www.kmart.com.au/*",
+        "https://www.zingpopculture.com.au/*",
+        "https://www.gameology.com.au/*"
+      ],
+      "js": ["content-script.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
+
