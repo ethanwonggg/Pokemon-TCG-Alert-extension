@@ -1,5 +1,7 @@
 # PokéDrop AU 🎴
 
+Born from my passion in collecting Pokemon Cards and fury against scalpers, I decided to create a Google extension that notifies users when new MSRP drops occur.
+
 A Chrome extension to monitor and get instant notifications for new Pokemon card releases and restocks across Australian retailers.
 
 ## Features
