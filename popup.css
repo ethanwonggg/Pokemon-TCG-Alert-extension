@@ -147,6 +147,7 @@ body {
   background: var(--accent-success-dim);
   border-radius: var(--radius-xl);
   border: 1px solid rgba(81, 207, 102, 0.3);
+  cursor: pointer;
 }
 
 .status-indicator.paused {
@@ -154,21 +155,37 @@ body {
   border-color: rgba(255, 107, 107, 0.3);
 }
 
-.status-indicator.paused .pulse {
-  background: var(--accent-danger);
-  animation: none;
-}
-
 .status-indicator.paused .status-text {
   color: var(--accent-danger);
 }
 
-.pulse {
-  width: 8px;
-  height: 8px;
-  background: var(--accent-success);
-  border-radius: 50%;
-  animation: pulse 2s ease-in-out infinite;
+.status-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  color: var(--accent-success);
+}
+
+.status-indicator.paused .status-icon {
+  color: var(--accent-danger);
+}
+
+.status-icon svg {
+  display: none;
+}
+
+.status-icon .icon-play {
+  display: block;
+}
+
+.status-indicator.paused .status-icon .icon-play {
+  display: none;
+}
+
+.status-indicator.paused .status-icon .icon-pause {
+  display: block;
 }
 
 @keyframes pulse {
